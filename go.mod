@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gavv/httpexpect/v2 v2.1.0
-	github.com/go-dawn/dawn v0.4.3
+	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.3
 	github.com/gofiber/fiber/v2 v2.1.3
 	github.com/gofiber/jwt/v2 v2.0.1
