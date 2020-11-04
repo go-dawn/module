@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -41,4 +42,44 @@ func Test_Module_Init(t *testing.T) {
 		at.Equal(time.Hour, m.Expiration)
 		at.NotNil(m.Repo)
 	})
+}
+
+func Test_Module_RegisterRoutes(t *testing.T) {
+	t.Parallel()
+
+	m := module{Config: &Config{SigningKey: "xx"}}
+
+	app := fiber.New()
+
+	m.RegisterRoutes(app)
+
+	assertHasRouteGroup(t, app, "/auth")
+	assertHasRoute(t, app, fiber.MethodPost, "/auth/login")
+}
+
+func assertHasRoute(t *testing.T, app *fiber.App, method string, path string) {
+	for _, routes := range app.Stack() {
+		for _, r := range routes {
+			if r.Method == method && r.Path == path {
+				return
+			}
+		}
+	}
+
+	assert.Failf(t, "%s %s not found", method, path)
+}
+
+func assertHasRouteGroup(t *testing.T, app *fiber.App, path string) {
+	for _, routes := range app.Stack() {
+		var found bool
+		for _, r := range routes {
+			if r.Path == path {
+				found = true
+				break
+			}
+		}
+		if !found {
+			assert.Failf(t, "group %s not found", path)
+		}
+	}
 }

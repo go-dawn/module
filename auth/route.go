@@ -47,16 +47,8 @@ func (m module) login(c *fiber.Ctx) (err error) {
 		return fiberx.CodeErr(fiber.StatusUnauthorized, err, "Failed to authenticate")
 	}
 
-	// Create token
-	token := jwt.New(signingMethod(m.SigningMethod))
-
-	// Set claims
-	claims := token.Claims.(jwt.MapClaims)
-	claims["id"] = id
-	claims["exp"] = time.Now().Add(m.Expiration).Unix()
-
 	// Generate encoded token and send it as response.
-	if t, err = token.SignedString([]byte(m.SigningKey)); err != nil {
+	if t, err = generateToken(m.SigningMethod, m.SigningKey, id, m.Expiration); err != nil {
 		return err
 	}
 
@@ -80,6 +72,8 @@ func (m module) authFunc(tpy string) authenticate {
 
 func signingMethod(method string) jwt.SigningMethod {
 	switch method {
+	case "", "HS256":
+		return jwt.SigningMethodHS256
 	case "HS384":
 		return jwt.SigningMethodHS384
 	case "HS512":
@@ -99,4 +93,17 @@ func signingMethod(method string) jwt.SigningMethod {
 	default:
 		return jwt.SigningMethodHS256
 	}
+}
+
+func generateToken(method, key string, id int, expiration time.Duration) (t string, err error) {
+	// Create token
+	token := jwt.New(signingMethod(method))
+
+	// Set claims
+	claims := token.Claims.(jwt.MapClaims)
+	claims["id"] = id
+	claims["exp"] = time.Now().Add(expiration).Unix()
+
+	// Generate encoded token and send it as response.
+	return token.SignedString([]byte(key))
 }
