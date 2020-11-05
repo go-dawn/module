@@ -8,7 +8,7 @@ import (
 
 var defaultConfigPath = "config/auth"
 
-type authenticate func(username, code string) (int, error)
+type authenticate func(key, code string) (int, error)
 
 type module struct {
 	dawn.Module
@@ -32,8 +32,9 @@ func (m module) Init() dawn.Cleanup {
 	m.setupConfig()
 
 	// Use custom Repo
-	if m.Repo == nil {
-		m.Repo = defaultRepo(sql.Conn())
+	if m.Service == nil {
+		// TODO need code validator implementation
+		m.Service = service{repository{sql.Conn()}, nil}
 	}
 
 	return nil

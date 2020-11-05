@@ -5,19 +5,30 @@ import (
 	"gorm.io/gorm"
 )
 
+var bcryptCost = bcrypt.DefaultCost
+
 // Repo is the repository interface for auth behaviors
 type Repo interface {
+	// RegisterByPassword gets a new user by username and password
+	RegisterByPassword(username, pass string) (int, error)
+
+	// RegisterByMobileCode gets a new user by mobile
+	RegisterByMobile(mobile string) (int, error)
+
+	// RegisterByEmailCode gets a new user by email
+	RegisterByEmail(email string) (int, error)
+
 	// LoginByPassword login system by username and password
 	// and return user id if authentication success
 	LoginByPassword(username, pass string) (int, error)
 
-	// LoginByMobile login system by mobile number and validate code
+	// LoginByMobileCode login system by mobile number
 	// and return user id if authentication success
-	LoginByMobile(mobile, code string) (int, error)
+	LoginByMobile(mobile string) (int, error)
 
-	// LoginByEmail login system by email address and validate code
+	// LoginByEmailCode login system by email address
 	// and return user id if authentication success
-	LoginByEmail(email, code string) (int, error)
+	LoginByEmail(email string) (int, error)
 }
 
 // repository is an internal implement of Repo interface
@@ -25,8 +36,28 @@ type repository struct {
 	db *gorm.DB
 }
 
-func defaultRepo(db *gorm.DB) repository {
-	return repository{db: db}
+func (r repository) RegisterByPassword(username, pass string) (id int, err error) {
+	u := &user{Username: username}
+
+	if u.Password, err = bcrypt.GenerateFromPassword([]byte(pass), bcryptCost); err != nil {
+		return
+	}
+
+	err, id = r.db.Create(u).Error, int(u.ID)
+
+	return
+}
+
+func (r repository) RegisterByMobile(mobile string) (int, error) {
+	u := &user{Mobile: mobile}
+	err, id := r.db.Create(u).Error, int(u.ID)
+	return id, err
+}
+
+func (r repository) RegisterByEmail(email string) (int, error) {
+	u := &user{Email: email}
+	err, id := r.db.Create(u).Error, int(u.ID)
+	return id, err
 }
 
 func (r repository) LoginByPassword(username, pass string) (id int, err error) {
@@ -44,17 +75,23 @@ func (r repository) LoginByPassword(username, pass string) (id int, err error) {
 	return
 }
 
-func (r repository) LoginByMobile(mobile, code string) (int, error) {
-	panic("implement me")
+func (r repository) LoginByMobile(mobile string) (int, error) {
+	var u user
+	err := r.db.First(&u, "mobile = ?", mobile).Error
+	return int(u.ID), err
 }
 
-func (r repository) LoginByEmail(email, code string) (int, error) {
-	panic("implement me")
+func (r repository) LoginByEmail(email string) (int, error) {
+	var u user
+	err := r.db.First(&u, "email = ?", email).Error
+	return int(u.ID), err
 }
 
 type user struct {
 	gorm.Model
 
-	Username string
+	Username string `gorm:"uniqueIndex"`
 	Password []byte
+	Mobile   string `gorm:"uniqueIndex"`
+	Email    string `gorm:"uniqueIndex"`
 }

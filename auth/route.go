@@ -60,9 +60,9 @@ func (m module) authFunc(tpy string) authenticate {
 	case "password":
 		return m.LoginByPassword
 	case "mobile":
-		return m.LoginByMobile
+		return m.LoginByMobileCode
 	case "email":
-		return m.LoginByEmail
+		return m.LoginByEmailCode
 	default:
 		return func(username, code string) (i int, err error) {
 			return 0, fmt.Errorf("auth: invalid authenticate type %s", tpy)

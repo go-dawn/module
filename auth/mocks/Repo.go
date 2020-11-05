@@ -9,20 +9,20 @@ type Repo struct {
 	mock.Mock
 }
 
-// LoginByEmail provides a mock function with given fields: email, code
-func (_m *Repo) LoginByEmail(email string, code string) (int, error) {
-	ret := _m.Called(email, code)
+// LoginByEmailCode provides a mock function with given fields: email
+func (_m *Repo) LoginByEmail(email string) (int, error) {
+	ret := _m.Called(email)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(string, string) int); ok {
-		r0 = rf(email, code)
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(email)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, string) error); ok {
-		r1 = rf(email, code)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(email)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -30,20 +30,20 @@ func (_m *Repo) LoginByEmail(email string, code string) (int, error) {
 	return r0, r1
 }
 
-// LoginByMobile provides a mock function with given fields: mobile, code
-func (_m *Repo) LoginByMobile(mobile string, code string) (int, error) {
-	ret := _m.Called(mobile, code)
+// LoginByMobileCode provides a mock function with given fields: mobile
+func (_m *Repo) LoginByMobile(mobile string) (int, error) {
+	ret := _m.Called(mobile)
 
 	var r0 int
-	if rf, ok := ret.Get(0).(func(string, string) int); ok {
-		r0 = rf(mobile, code)
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(mobile)
 	} else {
 		r0 = ret.Get(0).(int)
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, string) error); ok {
-		r1 = rf(mobile, code)
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(mobile)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -53,6 +53,69 @@ func (_m *Repo) LoginByMobile(mobile string, code string) (int, error) {
 
 // LoginByPassword provides a mock function with given fields: username, pass
 func (_m *Repo) LoginByPassword(username string, pass string) (int, error) {
+	ret := _m.Called(username, pass)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(string, string) int); ok {
+		r0 = rf(username, pass)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(username, pass)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// RegisterByEmailCode provides a mock function with given fields: email
+func (_m *Repo) RegisterByEmail(email string) (int, error) {
+	ret := _m.Called(email)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(email)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(email)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// RegisterByMobileCode provides a mock function with given fields: mobile
+func (_m *Repo) RegisterByMobile(mobile string) (int, error) {
+	ret := _m.Called(mobile)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(string) int); ok {
+		r0 = rf(mobile)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(mobile)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// RegisterByPassword provides a mock function with given fields: username, pass
+func (_m *Repo) RegisterByPassword(username string, pass string) (int, error) {
 	ret := _m.Called(username, pass)
 
 	var r0 int

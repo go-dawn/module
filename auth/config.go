@@ -8,8 +8,8 @@ import (
 
 // Config defines the config for auth module
 type Config struct {
-	// Repo is a custom repository for auth module
-	Repo
+	// Service is a custom service for auth module
+	Service
 
 	// SigningKey is for generating and validating jwt token
 	SigningKey string

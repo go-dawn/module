@@ -40,7 +40,7 @@ func Test_Module_Init(t *testing.T) {
 		at.Nil(m.Init())
 		at.Equal("xx", m.SigningKey)
 		at.Equal(time.Hour, m.Expiration)
-		at.NotNil(m.Repo)
+		at.NotNil(m.Service)
 	})
 }
 

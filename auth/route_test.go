@@ -159,10 +159,10 @@ func Test_Auth_SigningMethod(t *testing.T) {
 	}
 }
 
-func routeModule() (module, *mocks.Repo) {
-	mockRepo := new(mocks.Repo)
+func routeModule() (module, *mocks.Service) {
+	mockService := new(mocks.Service)
 	return module{Config: &Config{
-		Repo:       mockRepo,
+		Service:    mockService,
 		SigningKey: "test",
-	}}, mockRepo
+	}}, mockService
 }
