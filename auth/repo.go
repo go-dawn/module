@@ -1,6 +1,9 @@
 package auth
 
-import "gorm.io/gorm"
+import (
+	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
+)
 
 // Repo is the repository interface for auth behaviors
 type Repo interface {
@@ -26,8 +29,19 @@ func defaultRepo(db *gorm.DB) repository {
 	return repository{db: db}
 }
 
-func (r repository) LoginByPassword(username, pass string) (int, error) {
-	panic("implement me")
+func (r repository) LoginByPassword(username, pass string) (id int, err error) {
+	var u user
+	if err = r.db.First(&u, "username = ?", username).Error; err != nil {
+		return
+	}
+
+	if err = bcrypt.CompareHashAndPassword(u.Password, []byte(pass)); err != nil {
+		return
+	}
+
+	id = int(u.ID)
+
+	return
 }
 
 func (r repository) LoginByMobile(mobile, code string) (int, error) {
@@ -36,4 +50,11 @@ func (r repository) LoginByMobile(mobile, code string) (int, error) {
 
 func (r repository) LoginByEmail(email, code string) (int, error) {
 	panic("implement me")
+}
+
+type user struct {
+	gorm.Model
+
+	Username string
+	Password []byte
 }
