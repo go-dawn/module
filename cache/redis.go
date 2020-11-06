@@ -70,40 +70,78 @@ func (s redisStorage) Many(keys []string) (b [][]byte, err error) {
 }
 
 func (s redisStorage) Set(key string, value []byte, ttl time.Duration) error {
-	_, err := s.db.Set(cb, key, value, ttl).Result()
-	return err
+	return s.db.Set(cb, key, value, ttl).Err()
 }
 
-func (s redisStorage) Pull(key string) ([]byte, error) {
-	panic("implement me")
+func (s redisStorage) Pull(key string) (b []byte, err error) {
+	if b, err = s.db.Get(cb, key).Bytes(); err == nil {
+		_, err = s.db.Del(cb, key).Result()
+		return
+	}
+
+	if err == redis.Nil {
+		err = nil
+	}
+
+	return
 }
 
-func (s redisStorage) PullWithDefault(key string, defaultValue []byte) ([]byte, error) {
-	panic("implement me")
+func (s redisStorage) PullWithDefault(key string, defaultValue []byte) (b []byte, err error) {
+	if b, err = s.db.Get(cb, key).Bytes(); err == nil {
+		_, err = s.db.Del(cb, key).Result()
+		return
+	}
+
+	if err == redis.Nil {
+		err = nil
+		b = defaultValue
+	}
+
+	return
 }
 
 func (s redisStorage) Forever(key string, value []byte) error {
-	panic("implement me")
+	return s.db.Set(cb, key, value, 0).Err()
 }
 
-func (s redisStorage) Remember(key string, ttl time.Duration, valueFunc func() ([]byte, error)) ([]byte, error) {
-	panic("implement me")
+func (s redisStorage) Remember(key string, ttl time.Duration, valueFunc func() ([]byte, error)) (b []byte, err error) {
+	if b, err = s.db.Get(cb, key).Bytes(); err == nil {
+		return
+	}
+
+	if err == redis.Nil {
+		if b, err = valueFunc(); err == nil {
+			_, err = s.db.Set(cb, key, b, ttl).Result()
+		}
+	}
+
+	return
 }
 
-func (s redisStorage) RememberForever(key string, valueFunc func() ([]byte, error)) ([]byte, error) {
-	panic("implement me")
+func (s redisStorage) RememberForever(key string, valueFunc func() ([]byte, error)) (b []byte, err error) {
+	if b, err = s.db.Get(cb, key).Bytes(); err == nil {
+		return
+	}
+
+	if err == redis.Nil {
+		if b, err = valueFunc(); err == nil {
+			_, err = s.db.Set(cb, key, b, 0).Result()
+		}
+	}
+
+	return
 }
 
 func (s redisStorage) Delete(key string) error {
-	panic("implement me")
+	return s.db.Del(cb, key).Err()
 }
 
 func (s redisStorage) Reset() error {
-	panic("implement me")
+	return s.db.FlushDB(cb).Err()
 }
 
 func (s redisStorage) Close() error {
-	panic("implement me")
+	return nil
 }
 
 func (s redisStorage) gc() {

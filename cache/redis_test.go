@@ -5,12 +5,21 @@ import (
 	"testing"
 	"time"
 
+	"github.com/go-dawn/dawn/config"
+
 	"github.com/go-dawn/module/cache/mocks"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"
 )
 
 var mockErr = errors.New("fake error")
+
+func Test_Cache_Redis_New(t *testing.T) {
+	t.Parallel()
+
+	s := newRedis(config.New())
+	assert.Nil(t, s.db)
+}
 
 func Test_Cache_Redis_Has(t *testing.T) {
 	t.Parallel()
@@ -115,7 +124,7 @@ func Test_Cache_Redis_GetWithDefault(t *testing.T) {
 	})
 }
 
-func Test_Cache_Redis_Set(t *testing.T) {
+func Test_Cache_Redis_Many(t *testing.T) {
 	t.Parallel()
 
 	at := assert.New(t)
@@ -123,7 +132,7 @@ func Test_Cache_Redis_Set(t *testing.T) {
 	t.Run("success", func(t *testing.T) {
 		s, mockDB := getRedisStorage()
 
-		mockDB.On("Set", cb, "k1", "v2").
+		mockDB.On("MGet", cb, "k1", "k2").
 			Once().Return(redis.NewSliceResult([]interface{}{nil, "v2"}, nil))
 
 		b, err := s.Many([]string{"k1", "k2"})
@@ -144,7 +153,7 @@ func Test_Cache_Redis_Set(t *testing.T) {
 	})
 }
 
-func Test_Cache_Redis_Many(t *testing.T) {
+func Test_Cache_Redis_Set(t *testing.T) {
 	t.Parallel()
 
 	at := assert.New(t)
@@ -170,11 +179,191 @@ func Test_Cache_Redis_Many(t *testing.T) {
 	})
 }
 
-func TestRedis(t *testing.T) {
-	c := redis.NewClient(&redis.Options{Addr: "127.0.0.1:6379"})
-	b, _ := c.Set(cb, "k1", []byte("k2"), time.Second*10).Result()
+func Test_Cache_Redis_Pull(t *testing.T) {
+	t.Parallel()
 
-	t.Log(b)
+	at := assert.New(t)
+
+	t.Run("success", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("v1", nil)).
+			On("Del", cb, "k1").
+			Once().Return(redis.NewIntResult(1, nil))
+
+		b, err := s.Pull("k1")
+		at.Nil(err)
+		at.Equal("v1", string(b))
+	})
+
+	t.Run("non-exist", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("", redis.Nil))
+
+		b, err := s.Pull("k1")
+		at.Nil(err)
+		at.Nil(b)
+	})
+}
+
+func Test_Cache_Redis_PullWithDefault(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	t.Run("success", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("v1", nil)).
+			On("Del", cb, "k1").
+			Once().Return(redis.NewIntResult(1, nil))
+
+		b, err := s.PullWithDefault("k1", []byte("v11"))
+		at.Nil(err)
+		at.Equal("v1", string(b))
+	})
+
+	t.Run("non-exist", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("", redis.Nil))
+
+		b, err := s.PullWithDefault("k1", []byte("v11"))
+		at.Nil(err)
+		at.Equal("v11", string(b))
+	})
+}
+
+func Test_Cache_Redis_Forever(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	s, mockDB := getRedisStorage()
+
+	mockDB.On("Set", cb, "k1", []byte("v1"), time.Duration(0)).
+		Once().Return(redis.NewStatusResult("OK", nil))
+
+	err := s.Forever("k1", []byte("v1"))
+	at.Nil(err)
+}
+
+func Test_Cache_Redis_Remember(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	t.Run("success", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("v1", nil))
+
+		b, err := s.Remember("k1", time.Second, func() ([]byte, error) {
+			return []byte("v11"), nil
+		})
+		at.Nil(err)
+		at.Equal("v1", string(b))
+	})
+
+	t.Run("non-exist", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("", redis.Nil)).
+			On("Set", cb, "k1", []byte("v11"), time.Second).
+			Once().Return(redis.NewStatusResult("OK", nil))
+
+		b, err := s.Remember("k1", time.Second, func() ([]byte, error) {
+			return []byte("v11"), nil
+		})
+		at.Nil(err)
+		at.Equal("v11", string(b))
+	})
+}
+
+func Test_Cache_Redis_RememberForever(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	t.Run("success", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("v1", nil))
+
+		b, err := s.RememberForever("k1", func() ([]byte, error) {
+			return []byte("v11"), nil
+		})
+		at.Nil(err)
+		at.Equal("v1", string(b))
+	})
+
+	t.Run("non-exist", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Get", cb, "k1").
+			Once().Return(redis.NewStringResult("", redis.Nil)).
+			On("Set", cb, "k1", []byte("v11"), time.Duration(0)).
+			Once().Return(redis.NewStatusResult("OK", nil))
+
+		b, err := s.RememberForever("k1", func() ([]byte, error) {
+			return []byte("v11"), nil
+		})
+		at.Nil(err)
+		at.Equal("v11", string(b))
+	})
+}
+
+func Test_Cache_Redis_Delete(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	s, mockDB := getRedisStorage()
+
+	mockDB.On("Del", cb, "k1").
+		Once().Return(redis.NewIntResult(1, nil))
+
+	err := s.Delete("k1")
+	at.Nil(err)
+}
+
+func Test_Cache_Redis_Reset(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	s, mockDB := getRedisStorage()
+
+	mockDB.On("FlushDB", cb).
+		Once().Return(redis.NewStatusResult("OK", nil))
+
+	err := s.Reset()
+	at.Nil(err)
+}
+
+func Test_Cache_Redis_Close(t *testing.T) {
+	t.Parallel()
+
+	at := assert.New(t)
+
+	s, _ := getRedisStorage()
+
+	err := s.Close()
+	at.Nil(err)
+}
+
+func Test_Cache_Redis_GC(t *testing.T) {
+	t.Parallel()
+
+	(redisStorage{}).gc()
 }
 
 func getRedisStorage() (redisStorage, *mocks.Cmdable) {
