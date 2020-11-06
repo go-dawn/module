@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	m        Module
+	m        = &Module{}
 	fallback = "memory"
 )
 
@@ -22,15 +22,15 @@ type Module struct {
 }
 
 // New returns the Module
-func New() Module {
+func New() *Module {
 	return m
 }
 
-func (m Module) String() string {
+func (m *Module) String() string {
 	return "dawn:cache"
 }
 
-func (m Module) Init() dawn.Cleanup {
+func (m *Module) Init() dawn.Cleanup {
 	m.storage = make(map[string]Storage)
 
 	// extract cache config
@@ -41,7 +41,6 @@ func (m Module) Init() dawn.Cleanup {
 	storeConfig := c.GetStringMap("storage")
 
 	if len(storeConfig) == 0 {
-		m.fallback = fallback
 		m.storage[m.fallback] = build(m.fallback, config.New())
 	}
 
@@ -69,13 +68,13 @@ func build(name string, c *config.Config) Storage {
 	}
 }
 
-func (m Module) Boot() {
+func (m *Module) Boot() {
 	for _, s := range m.storage {
 		go s.gc()
 	}
 }
 
-func (m Module) cleanup() {
+func (m *Module) cleanup() {
 	for _, s := range m.storage {
 		_ = s.Close()
 	}
@@ -134,7 +133,7 @@ type Storage interface {
 func Store(name ...string) Storage {
 	n := m.fallback
 
-	if len(name) > 0 {
+	if len(name) > 0 && name[0] != "" {
 		n = name[0]
 	}
 

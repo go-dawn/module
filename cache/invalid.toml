@@ -1,0 +1,7 @@
+[Cache]
+Default = "memory"
+
+[Cache.Storage]
+[Cache.Storage.memory]
+Driver = "invalid"
+GCInterval = "10s"
