@@ -34,16 +34,6 @@ func Test_Auth_Repo_RegisterByPassword(t *testing.T) {
 		at.NotNil(err)
 		at.Contains(err.Error(), "username")
 	})
-
-	t.Run("error", func(t *testing.T) {
-		repo := getRepo(t)
-
-		bcryptCost = bcrypt.MaxCost + 1
-		defer func() { bcryptCost = bcrypt.DefaultCost }()
-
-		_, err := repo.RegisterByPassword(username, pass)
-		at.NotNil(err)
-	})
 }
 
 func Test_Auth_Repo_RegisterByMobile(t *testing.T) {
