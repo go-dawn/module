@@ -11,15 +11,15 @@ func Test_Cache_Module_Name(t *testing.T) {
 }
 
 func Test_Cache_Module_Init(t *testing.T) {
-	m := module{}
+	m := Module{}
 
-	m.Init()()
+	m.Init()
 
 	// more assertions
 }
 
-func Test_Module_Boot(t *testing.T) {
-	m := &cacheModule{}
+func Test_Cache_Module_Boot(t *testing.T) {
+	m := Module{}
 
 	m.Boot()
 

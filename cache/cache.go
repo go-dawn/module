@@ -11,26 +11,28 @@ import (
 )
 
 var (
-	m        = module{storage: make(map[string]Storage)}
+	m        Module
 	fallback = "memory"
 )
 
-type module struct {
+type Module struct {
 	dawn.Module
 	storage  map[string]Storage
 	fallback string
 }
 
-// New returns the module
-func New() dawn.Moduler {
+// New returns the Module
+func New() Module {
 	return m
 }
 
-func (m module) String() string {
+func (m Module) String() string {
 	return "dawn:cache"
 }
 
-func (m module) Init() dawn.Cleanup {
+func (m Module) Init() dawn.Cleanup {
+	m.storage = make(map[string]Storage)
+
 	// extract cache config
 	c := config.Sub("cache")
 
@@ -49,7 +51,7 @@ func (m module) Init() dawn.Cleanup {
 		m.storage[name] = build(name, cfg)
 	}
 
-	return nil
+	return m.cleanup
 }
 
 func build(name string, c *config.Config) Storage {
@@ -57,64 +59,78 @@ func build(name string, c *config.Config) Storage {
 
 	switch strings.ToLower(driver) {
 	case "memory":
-		return resolveMemory(c)
+		return newMemory(c)
 	case "redis":
-		return resolveRedis(c)
+		return newRedis(c)
 	case "gorm":
-		return resolveGorm(c)
+		return newGorm(c)
 	default:
 		panic(fmt.Sprintf("dawn:cache unknown driver %s of %s", driver, name))
 	}
 }
 
+func (m Module) Boot() {
+	for _, s := range m.storage {
+		go s.gc()
+	}
+}
+
+func (m Module) cleanup() {
+	for _, s := range m.storage {
+		_ = s.Close()
+	}
+}
+
 // Storage interface defines cache behaviors.
 type Storage interface {
-	// Has determines if an item exists in the cache.
+	// Has determines if an entry exists in the cache.
 	Has(key string) (bool, error)
 
-	// Get retrieves an item from the cache by key.
-	// Or use default value if value doesn't exist.
-	Get(key string, defaultValue ...[]byte) ([]byte, error)
+	// Get retrieves an entry from the cache for the given key.
+	Get(key string) ([]byte, error)
 
-	// Many retrieves multiple items from the cache by key.
+	// GetWithDefault retrieves an entry from the cache for the
+	// given key. Returns default value if value is not found.
+	GetWithDefault(key string, defaultValue []byte) ([]byte, error)
+
+	// Many retrieves multiple db from the cache by key.
 	// Items not found in the cache will have a empty string.
 	Many(keys []string) ([][]byte, error)
 
-	// Put stores an item in the cache for a given number of expiration.
-	Put(key string, value []byte, expiration time.Duration) error
+	// Set stores an entry in the cache for a given number of ttl.
+	Set(key string, value []byte, ttl time.Duration) error
 
-	// Pull retrieves an item from the cache and delete it.
-	// Or use default value if the item doesn't exist.
-	Pull(key string, defaultValue ...[]byte) ([]byte, error)
+	// Pull retrieves an entry from the cache and removes it in the cache.
+	Pull(key string) ([]byte, error)
 
-	// Increment increase an item in the cache, default by 1.
-	Increment(key string, by ...int) (int, error)
+	// PullWithDefault retrieves an entry from the cache and removes it in
+	// the cache. Returns default value if value is not found.
+	PullWithDefault(key string, defaultValue []byte) ([]byte, error)
 
-	// Decrement decrease an item in the cache, default by 1.
-	Decrement(key string, value ...int) (int, error)
-
-	// Forever stores an item in the cache indefinitely.
+	// Forever stores an entry in the cache indefinitely.
 	Forever(key string, value []byte) error
 
-	// Remember stores an item from the closure in the cache
-	// for a given number of expiration.
-	Remember(key string, expiration time.Duration, defaultValueFunc func() ([]byte, error)) ([]byte, error)
+	// Remember gets an entry from the cache, or stores an entry from
+	// the closure in the cache for a given number of ttl.
+	Remember(key string, ttl time.Duration, valueFunc func() ([]byte, error)) ([]byte, error)
 
-	// RememberForever stores an item from the closure in the
-	// cache forever.
-	RememberForever(key string, defaultValueFunc func() ([]byte, error)) ([]byte, error)
+	// RememberForever gets an entry from the cache, or stores an entry
+	// from the closure in the cache forever.
+	RememberForever(key string, valueFunc func() ([]byte, error)) ([]byte, error)
 
-	// Forget removes an item from the cache.
-	Forget(key string) error
+	// Delete removes an entry from the cache.
+	Delete(key string) error
 
-	// Flush removes all items from the cache.
-	Flush() error
+	// Reset removes all data from the cache.
+	Reset() error
+
+	// Close closes the cache
+	Close() error
 
 	gc()
 }
 
-// Store gets cache storage by specific name
-// or default.
+// Store gets cache storage by specific name or fallback.
 func Store(name ...string) Storage {
 	n := m.fallback
 
