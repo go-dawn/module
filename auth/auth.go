@@ -31,7 +31,7 @@ func (m module) String() string {
 func (m module) Init() dawn.Cleanup {
 	m.setupConfig()
 
-	// Use custom Repo
+	// Use custom Service
 	if m.Service == nil {
 		// TODO need code validator implementation
 		m.Service = service{repository{sql.Conn()}, nil}
