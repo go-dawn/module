@@ -339,13 +339,27 @@ func Test_Cache_Redis_Reset(t *testing.T) {
 
 	at := assert.New(t)
 
-	s, mockDB := getRedisStorage()
+	t.Run("success", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
 
-	mockDB.On("FlushDB", cb).
-		Once().Return(redis.NewStatusResult("OK", nil))
+		mockDB.On("Scan", cb, uint64(0), "*", int64(1000)).
+			Once().Return(redis.NewScanCmdResult([]string{"k1", "k2"}, 10, nil)).
+			On("Scan", cb, uint64(10), "*", int64(1000)).
+			Once().Return(redis.NewScanCmdResult([]string{}, 20, nil)).
+			On("Del", cb, "k1", "k2").
+			Once().Return(redis.NewIntResult(2, nil))
 
-	err := s.Reset()
-	at.Nil(err)
+		at.Nil(s.Reset())
+	})
+
+	t.Run("error", func(t *testing.T) {
+		s, mockDB := getRedisStorage()
+
+		mockDB.On("Scan", cb, uint64(0), "*", int64(1000)).
+			Once().Return(redis.NewScanCmdResult(nil, 10, mockErr))
+
+		at.Equal(mockErr, s.Reset())
+	})
 }
 
 func Test_Cache_Redis_Close(t *testing.T) {
@@ -368,4 +382,10 @@ func Test_Cache_Redis_GC(t *testing.T) {
 func getRedisStorage() (redisStorage, *mocks.Cmdable) {
 	mockDB := new(mocks.Cmdable)
 	return redisStorage{db: mockDB}, mockDB
+}
+
+func TestRedis(t *testing.T) {
+	c := redis.NewClient(&redis.Options{Addr: "127.0.0.1:6379"})
+
+	t.Log(c.Scan(cb, 0, "dawn_*", 1).Result())
 }
