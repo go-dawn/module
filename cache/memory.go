@@ -7,41 +7,41 @@ import (
 	"github.com/go-dawn/dawn/config"
 )
 
-type entry struct {
+type memEntry struct {
 	data   []byte
 	expiry int64
 }
 
-type memory struct {
+type memStorage struct {
 	db         sync.Map
 	gcInterval time.Duration
 	done       chan struct{}
 }
 
-func newMemory(c *config.Config) memory {
-	return memory{
+func newMemory(c *config.Config) memStorage {
+	return memStorage{
 		gcInterval: c.GetDuration("GCInterval", time.Second*10),
 		done:       make(chan struct{}),
 	}
 }
 
-func (m memory) Has(key string) (bool, error) {
-	if v, ok := m.db.Load(key); ok {
-		if i := v.(entry); i.expiry >= time.Now().Unix() {
+func (s memStorage) Has(key string) (bool, error) {
+	if v, ok := s.db.Load(key); ok {
+		if i := v.(memEntry); i.expiry >= time.Now().Unix() {
 			return true, nil
 		}
 		// Delete expired entry
-		m.db.Delete(key)
+		s.db.Delete(key)
 	}
 	return false, nil
 }
 
-func (m memory) Get(key string) ([]byte, error) {
-	return m.value(key), nil
+func (s memStorage) Get(key string) ([]byte, error) {
+	return s.value(key), nil
 }
 
-func (m memory) GetWithDefault(key string, defaultValue []byte) ([]byte, error) {
-	v := m.value(key)
+func (s memStorage) GetWithDefault(key string, defaultValue []byte) ([]byte, error) {
+	v := s.value(key)
 
 	if v == nil {
 		v = defaultValue
@@ -50,91 +50,91 @@ func (m memory) GetWithDefault(key string, defaultValue []byte) ([]byte, error) 
 	return v, nil
 }
 
-func (m memory) Many(keys []string) (values [][]byte, err error) {
+func (s memStorage) Many(keys []string) (values [][]byte, err error) {
 	for _, key := range keys {
-		values = append(values, m.value(key))
+		values = append(values, s.value(key))
 	}
 
 	return
 }
 
-func (m memory) Set(key string, value []byte, ttl time.Duration) error {
-	m.db.Store(key, entry{data: value, expiry: time.Now().Add(ttl).Unix()})
+func (s memStorage) Set(key string, value []byte, ttl time.Duration) error {
+	s.db.Store(key, memEntry{data: value, expiry: time.Now().Add(ttl).Unix()})
 	return nil
 }
 
-func (m memory) Pull(key string) ([]byte, error) {
-	v := m.value(key)
+func (s memStorage) Pull(key string) ([]byte, error) {
+	v := s.value(key)
 	if v != nil {
-		m.db.Delete(key)
+		s.db.Delete(key)
 	}
 	return v, nil
 }
 
-func (m memory) PullWithDefault(key string, defaultValue []byte) ([]byte, error) {
-	v := m.value(key)
+func (s memStorage) PullWithDefault(key string, defaultValue []byte) ([]byte, error) {
+	v := s.value(key)
 	if v != nil {
-		m.db.Delete(key)
+		s.db.Delete(key)
 	} else {
 		v = defaultValue
 	}
 	return v, nil
 }
 
-func (m memory) Forever(key string, value []byte) error {
-	m.db.Store(key, entry{data: value, expiry: 0})
+func (s memStorage) Forever(key string, value []byte) error {
+	s.db.Store(key, memEntry{data: value, expiry: 0})
 	return nil
 }
 
-func (m memory) Remember(key string, ttl time.Duration, valueFunc func() ([]byte, error)) (v []byte, err error) {
-	if v = m.value(key); v == nil {
+func (s memStorage) Remember(key string, ttl time.Duration, valueFunc func() ([]byte, error)) (v []byte, err error) {
+	if v = s.value(key); v == nil {
 		if v, err = valueFunc(); err == nil {
-			m.db.Store(key, entry{data: v, expiry: time.Now().Add(ttl).Unix()})
+			s.db.Store(key, memEntry{data: v, expiry: time.Now().Add(ttl).Unix()})
 		}
 	}
 	return
 }
 
-func (m memory) RememberForever(key string, valueFunc func() ([]byte, error)) (v []byte, err error) {
-	if v = m.value(key); v == nil {
+func (s memStorage) RememberForever(key string, valueFunc func() ([]byte, error)) (v []byte, err error) {
+	if v = s.value(key); v == nil {
 		if v, err = valueFunc(); err == nil {
-			m.db.Store(key, entry{data: v, expiry: 0})
+			s.db.Store(key, memEntry{data: v, expiry: 0})
 		}
 	}
 	return
 }
 
-func (m memory) Delete(key string) error {
-	m.db.Delete(key)
+func (s memStorage) Delete(key string) error {
+	s.db.Delete(key)
 	return nil
 }
 
-func (m memory) Reset() error {
-	m.db.Range(func(key, _ interface{}) bool {
-		m.db.Delete(key)
+func (s memStorage) Reset() error {
+	s.db.Range(func(key, _ interface{}) bool {
+		s.db.Delete(key)
 		return true
 	})
 	return nil
 }
 
-func (m memory) Close() error {
-	close(m.done)
+func (s memStorage) Close() error {
+	close(s.done)
 	return nil
 }
 
-func (m memory) gc() {
-	ticker := time.NewTicker(m.gcInterval)
+func (s memStorage) gc() {
+	ticker := time.NewTicker(s.gcInterval)
 	defer ticker.Stop()
 
 	for {
 		select {
-		case <-m.done:
+		case <-s.done:
 			return
 		case t := <-ticker.C:
 			now := t.Unix()
-			m.db.Range(func(key, value interface{}) bool {
-				if e := value.(entry); e.expiry != 0 && e.expiry < now {
-					m.db.Delete(key)
+			s.db.Range(func(key, value interface{}) bool {
+				if e := value.(memEntry); e.expiry != 0 && e.expiry < now {
+					s.db.Delete(key)
 				}
 				return true
 			})
@@ -142,13 +142,13 @@ func (m memory) gc() {
 	}
 }
 
-func (m memory) value(key string) []byte {
-	if v, ok := m.db.Load(key); ok {
-		if e := v.(entry); e.expiry == 0 || e.expiry >= time.Now().Unix() {
+func (s memStorage) value(key string) []byte {
+	if v, ok := s.db.Load(key); ok {
+		if e := v.(memEntry); e.expiry == 0 || e.expiry >= time.Now().Unix() {
 			return e.data
 		}
 		// Delete expired entry
-		m.db.Delete(key)
+		s.db.Delete(key)
 	}
 	return nil
 }

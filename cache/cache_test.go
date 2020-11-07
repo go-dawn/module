@@ -53,7 +53,7 @@ func Test_Cache_Module_Boot(t *testing.T) {
 	t.Parallel()
 
 	m := &Module{
-		storage: map[string]Storage{
+		storage: map[string]Cacher{
 			fallback: newMemory(config.New()),
 		},
 	}
@@ -64,10 +64,10 @@ func Test_Cache_Module_Boot(t *testing.T) {
 func Test_Cache_Module_Store(t *testing.T) {
 	m = &Module{
 		fallback: fallback,
-		storage: map[string]Storage{
+		storage: map[string]Cacher{
 			fallback: newMemory(config.New()),
 		},
 	}
 
-	assert.NotNil(t, Store(fallback))
+	assert.NotNil(t, Storage(fallback))
 }

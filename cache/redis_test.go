@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-dawn/dawn/config"
-
 	"github.com/go-dawn/module/cache/mocks"
 	"github.com/go-redis/redis/v8"
 	"github.com/stretchr/testify/assert"

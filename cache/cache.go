@@ -17,7 +17,7 @@ var (
 
 type Module struct {
 	dawn.Module
-	storage  map[string]Storage
+	storage  map[string]Cacher
 	fallback string
 }
 
@@ -31,7 +31,7 @@ func (m *Module) String() string {
 }
 
 func (m *Module) Init() dawn.Cleanup {
-	m.storage = make(map[string]Storage)
+	m.storage = make(map[string]Cacher)
 
 	// extract cache config
 	c := config.Sub("cache")
@@ -53,7 +53,7 @@ func (m *Module) Init() dawn.Cleanup {
 	return m.cleanup
 }
 
-func build(name string, c *config.Config) Storage {
+func build(name string, c *config.Config) Cacher {
 	driver := c.GetString("driver", "memory")
 
 	switch strings.ToLower(driver) {
@@ -80,8 +80,8 @@ func (m *Module) cleanup() {
 	}
 }
 
-// Storage interface defines cache behaviors.
-type Storage interface {
+// Cacher interface defines cache behaviors.
+type Cacher interface {
 	// Has determines if an entry exists in the cache.
 	Has(key string) (bool, error)
 
@@ -129,8 +129,8 @@ type Storage interface {
 	gc()
 }
 
-// Store gets cache storage by specific name or fallback.
-func Store(name ...string) Storage {
+// Storage gets cache storage by specific name or fallback.
+func Storage(name ...string) Cacher {
 	n := m.fallback
 
 	if len(name) > 0 && name[0] != "" {
