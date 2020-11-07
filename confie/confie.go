@@ -1,8 +1,9 @@
 package confie
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"strings"
 	"time"
 
@@ -93,9 +94,9 @@ var numbers = "0123456789"
 func (m *Module) code() []byte {
 	buf := make([]byte, m.codeLen)
 
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := 0; i < m.codeLen; i++ {
-		buf[i] = numbers[r.Int()%10]
+		n, _ := rand.Int(rand.Reader, big.NewInt(1000))
+		buf[i] = numbers[n.Int64()%10]
 	}
 
 	return buf
