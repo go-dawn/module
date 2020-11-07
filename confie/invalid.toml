@@ -1,0 +1,6 @@
+# Confie maintains code
+[Confie]
+Default = "local"
+
+[Confie.Envoys]
+[Confie.Envoys.invalid]

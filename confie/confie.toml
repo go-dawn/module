@@ -1,0 +1,8 @@
+# Confie maintains code
+[Confie]
+Default = "local"
+
+[Confie.Envoys]
+[Confie.Envoys.local]
+# Store send log here
+LogFile = "./confie.log"
