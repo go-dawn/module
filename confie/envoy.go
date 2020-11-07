@@ -3,6 +3,8 @@ package confie
 import (
 	"errors"
 	"time"
+
+	"github.com/go-dawn/pkg/rand"
 )
 
 // ErrNotMatched occurs when code is not matched
@@ -28,7 +30,7 @@ func Call(name ...string) *Envoy {
 
 // Make generates code and sends it
 func (e *Envoy) Make(address, key string, ttl time.Duration) (err error) {
-	c := e.m.code()
+	c := rand.NumBytes(e.m.codeLen)
 
 	if err = e.m.Set(key, c, ttl); err != nil {
 		return

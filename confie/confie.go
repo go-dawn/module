@@ -1,9 +1,7 @@
 package confie
 
 import (
-	"crypto/rand"
 	"fmt"
-	"math/big"
 	"strings"
 	"time"
 
@@ -87,19 +85,6 @@ func (m *Module) cleanup() {
 	for _, e := range m.envoys {
 		e.Sender.close()
 	}
-}
-
-var numbers = "0123456789"
-
-func (m *Module) code() []byte {
-	buf := make([]byte, m.codeLen)
-
-	for i := 0; i < m.codeLen; i++ {
-		n, _ := rand.Int(rand.Reader, big.NewInt(1000))
-		buf[i] = numbers[n.Int64()%10]
-	}
-
-	return buf
 }
 
 // Sender defines an interface to send code with expiration

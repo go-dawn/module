@@ -34,20 +34,3 @@ func Test_Confie_Module_Init(t *testing.T) {
 		})
 	})
 }
-
-func Test_Confie_Module_Code(t *testing.T) {
-	m := &Module{codeLen: 6}
-
-	assert.Len(t, m.code(), 6)
-}
-
-func Benchmark_Confie_Module_Code(b *testing.B) {
-	m := &Module{codeLen: 6}
-	b.RunParallel(func(pb *testing.PB) {
-		b.ReportAllocs()
-		b.ResetTimer()
-		for pb.Next() {
-			_ = m.code()
-		}
-	})
-}

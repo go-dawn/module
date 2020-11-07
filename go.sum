@@ -65,6 +65,7 @@ github.com/gavv/httpexpect/v2 v2.1.0/go.mod h1:lnd0TqJLrP+wkJk3SFwtrpSlOAZQ7HaaI
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-dawn/dawn v0.4.2 h1:RaOqHeKPd6SG0/dpmWW+EbztkwrTM++m17GUfLZCFQo=
 github.com/go-dawn/dawn v0.4.2/go.mod h1:Saosp0k/kTMA8jevdaSAr0ofHWJZXqr92NvvWGsbuCE=
+github.com/go-dawn/dawn v0.4.3/go.mod h1:08mTntP/UANeBBA+YsVhoo+QNU3dz5u6YfHQbAcMOJE=
 github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d h1:ye1EVAS0P7v0XK7X9KrXnnMT0kczbDjQzUC4bOKOqgw=
 github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d/go.mod h1:8kxfBJZ5ie9lbcxJN1BtILRQbILsGCzNprRF8nJLQvs=
 github.com/go-dawn/pkg v0.0.2/go.mod h1:YPEelJmDoZX5xYrHPiYPFyyk7X7BHzjHlXr99IK7sb4=
@@ -72,6 +73,10 @@ github.com/go-dawn/pkg v0.0.3 h1:21D7p1tpWtcqeMPx7QmMTe0zUAh80bl+T9GpJIjILr8=
 github.com/go-dawn/pkg v0.0.3/go.mod h1:nJ1DXtgjlVXmmJlCc2YAUanC/2gDsjTT0EKfC3iCQSo=
 github.com/go-dawn/pkg v0.0.4-0.20201104085859-62b37379c717 h1:tXcigGAzG0ky6WTmua7IVAFTxOV8QeYWqBJ+kTxgO/I=
 github.com/go-dawn/pkg v0.0.4-0.20201104085859-62b37379c717/go.mod h1:isaSuALyoPVmiLYwP5+JXiCSbOsqdaxo0NbPEP1vEaQ=
+github.com/go-dawn/pkg v0.0.4-0.20201107155513-f02cfff9f320 h1:pxijj4P2CSjivkY6EpKpZ9iacDaK6M5AQEW6MabBfGM=
+github.com/go-dawn/pkg v0.0.4-0.20201107155513-f02cfff9f320/go.mod h1:hDWCtnLscnQpr6CKa0C/AuzZXLXvMdc8S56w5GpZ0mc=
+github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1 h1:joDgtjM7FYLgAVNPkWixRLSZI5VdWlDXD7+g+7ZufDQ=
+github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1/go.mod h1:hDWCtnLscnQpr6CKa0C/AuzZXLXvMdc8S56w5GpZ0mc=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
@@ -401,6 +406,8 @@ github.com/valyala/fasthttp v1.16.0 h1:9zAqOYLl8Tuy3E5R6ckzGDJ1g8+pw15oQp2iL9Jl6
 github.com/valyala/fasthttp v1.16.0/go.mod h1:YOKImeEosDdBPnxc0gy7INqi3m1zK6A+xl6TwOBhHCA=
 github.com/valyala/fasthttp v1.17.0 h1:P8/koH4aSnJ4xbd0cUUFEGQs3jQqIxoDDyRQrUiAkqg=
 github.com/valyala/fasthttp v1.17.0/go.mod h1:jjraHZVbKOXftJfsOYoAjaeygpj5hr8ermTRJNroD7A=
+github.com/valyala/fastrand v1.0.0 h1:LUKT9aKer2dVQNUi3waewTbKV+7H17kvWFNKs2ObdkI=
+github.com/valyala/fastrand v1.0.0/go.mod h1:HWqCzkrkg6QXT8V2EXWvXCoow7vLwOFN002oeRzjapQ=
 github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a h1:0R4NLDRDZX6JcmhJgXi5E4b8Wg84ihbmUKp/GvSPEzc=
 github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a/go.mod h1:v3UYOV9WzVtRmSR+PDvWpU/qWl4Wa5LApYYX4ZtKbio=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f h1:J9EGpcZtP0E/raorCMxlFGSTBrsSlaDGf3jU/qvAE2c=
