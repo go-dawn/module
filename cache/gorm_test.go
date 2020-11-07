@@ -270,15 +270,9 @@ func Test_Cache_Gorm_GC(t *testing.T) {
 	}, time.Second, time.Millisecond*10)
 }
 
-type fake struct {
-	Entry gormEntry `gorm:"embedded"`
-}
-
-func (fake) TableName() string { return "test_dawn_cache" }
-
 func getGormStorage(t *testing.T) *gormStorage {
 	s := &gormStorage{
-		db:         deck.SetupGormDB(t, &fake{}),
+		db:         deck.SetupGormDB(t),
 		table:      "test_dawn_cache",
 		gcInterval: time.Millisecond * 10,
 		done:       make(chan struct{}),

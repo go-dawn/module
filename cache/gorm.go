@@ -37,6 +37,8 @@ func (s *gormStorage) setup() *gormStorage {
 		}).
 			Table(s.table).
 			Session(&gorm.Session{WithConditions: true})
+
+		_ = s.db.AutoMigrate(&gormEntry{})
 	}
 
 	return s
