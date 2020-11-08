@@ -20,6 +20,10 @@ type Envoy struct {
 
 // Call returns a named envoy
 func Call(name ...string) *Envoy {
+	if m.envoys == nil {
+		return nil
+	}
+
 	n := fallback
 	if len(name) > 0 && name[0] != "" {
 		n = name[0]
