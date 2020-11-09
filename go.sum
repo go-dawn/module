@@ -71,10 +71,6 @@ github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d/go.mod h1:8kxfBJZ5i
 github.com/go-dawn/pkg v0.0.2/go.mod h1:YPEelJmDoZX5xYrHPiYPFyyk7X7BHzjHlXr99IK7sb4=
 github.com/go-dawn/pkg v0.0.3 h1:21D7p1tpWtcqeMPx7QmMTe0zUAh80bl+T9GpJIjILr8=
 github.com/go-dawn/pkg v0.0.3/go.mod h1:nJ1DXtgjlVXmmJlCc2YAUanC/2gDsjTT0EKfC3iCQSo=
-github.com/go-dawn/pkg v0.0.4-0.20201104085859-62b37379c717 h1:tXcigGAzG0ky6WTmua7IVAFTxOV8QeYWqBJ+kTxgO/I=
-github.com/go-dawn/pkg v0.0.4-0.20201104085859-62b37379c717/go.mod h1:isaSuALyoPVmiLYwP5+JXiCSbOsqdaxo0NbPEP1vEaQ=
-github.com/go-dawn/pkg v0.0.4-0.20201107155513-f02cfff9f320 h1:pxijj4P2CSjivkY6EpKpZ9iacDaK6M5AQEW6MabBfGM=
-github.com/go-dawn/pkg v0.0.4-0.20201107155513-f02cfff9f320/go.mod h1:hDWCtnLscnQpr6CKa0C/AuzZXLXvMdc8S56w5GpZ0mc=
 github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1 h1:joDgtjM7FYLgAVNPkWixRLSZI5VdWlDXD7+g+7ZufDQ=
 github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1/go.mod h1:hDWCtnLscnQpr6CKa0C/AuzZXLXvMdc8S56w5GpZ0mc=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
