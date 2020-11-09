@@ -18,6 +18,7 @@ type Module struct {
 	*Config
 	envoys  map[string]*Envoy
 	codeLen int
+	ttl     time.Duration
 }
 
 // New returns the Module
@@ -43,6 +44,7 @@ func (m *Module) Init() dawn.Cleanup {
 	c := config.Sub("confie")
 
 	m.codeLen = c.GetInt("codeLength", 6)
+	m.ttl = c.GetDuration("ttl", time.Minute*5)
 
 	if m.Storage == nil {
 		m.Storage = cache.Storage()
