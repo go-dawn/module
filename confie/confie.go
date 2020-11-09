@@ -85,7 +85,7 @@ func (m *Module) build(name string, c *config.Config) *Envoy {
 
 func (m *Module) cleanup() {
 	for _, e := range m.envoys {
-		e.Sender.close()
+		_ = e.Sender.Close()
 	}
 }
 
@@ -94,7 +94,8 @@ type Sender interface {
 	// Send delivers code to the address
 	Send(address, code string) error
 
-	close()
+	// Close releases resource if needed
+	Close() error
 }
 
 // Storage defines behaviors to manage sent code

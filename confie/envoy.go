@@ -2,7 +2,6 @@ package confie
 
 import (
 	"errors"
-	"time"
 
 	"github.com/go-dawn/pkg/rand"
 )
@@ -33,10 +32,10 @@ func Call(name ...string) *Envoy {
 }
 
 // Make generates code and sends it
-func (e *Envoy) Make(address, key string, ttl time.Duration) (err error) {
+func (e *Envoy) Make(address, key string) (err error) {
 	c := rand.NumBytes(e.m.codeLen)
 
-	if err = e.m.Set(key, c, ttl); err != nil {
+	if err = e.m.Set(key, c, e.m.ttl); err != nil {
 		return
 	}
 

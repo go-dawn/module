@@ -31,8 +31,10 @@ func (s *localSender) Send(address, code string) error {
 	return err
 }
 
-func (s *localSender) close() {
+func (s *localSender) Close() error {
 	if s.f != nil {
-		_ = s.f.Close()
+		return s.f.Close()
 	}
+
+	return nil
 }

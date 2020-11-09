@@ -21,7 +21,7 @@ func Test_Confie_Local_New(t *testing.T) {
 
 	l := newLocalSender(c)
 
-	l.close()
+	at.Nil(l.Close())
 }
 
 func Test_Confie_Local_Send(t *testing.T) {
