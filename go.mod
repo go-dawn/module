@@ -9,7 +9,7 @@ require (
 	github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1
 	github.com/go-redis/redis/v8 v8.3.4
 	github.com/gofiber/fiber/v2 v2.2.0
-	github.com/gofiber/jwt/v2 v2.0.1
+	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/klauspost/compress v1.11.2 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
