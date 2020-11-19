@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/go-dawn/dawn/fiberx"
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"

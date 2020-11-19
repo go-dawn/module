@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gavv/httpexpect/v2"
 	"github.com/go-dawn/dawn/fiberx"
 	"github.com/go-dawn/module/auth/mocks"

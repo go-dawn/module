@@ -3,14 +3,14 @@ module github.com/go-dawn/module
 go 1.14
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
 	github.com/gavv/httpexpect/v2 v2.1.0
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1
 	github.com/go-redis/redis/v8 v8.3.4
 	github.com/gofiber/fiber/v2 v2.2.0
-	github.com/gofiber/jwt/v2 v2.0.1
-	github.com/klauspost/compress v1.11.2 // indirect
+	github.com/gofiber/jwt/v2 v2.1.0
+	github.com/klauspost/compress v1.11.3 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/spf13/afero v1.4.1 // indirect
@@ -18,6 +18,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/stretchr/testify v1.6.1
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
+	golang.org/x/sys v0.0.0-20201118182958-a01c418693c7 // indirect
 	golang.org/x/text v0.3.4 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gorm.io/gorm v1.20.6
