@@ -61,7 +61,7 @@ func Test_Confie_Envoy_Verify(t *testing.T) {
 		storage.On("Get", "key").
 			Once().Return(nil, mockErr)
 
-		_, err := e.Verify("key", "123456")
+		err := e.Verify("key", "123456")
 
 		at.Equal(mockErr, err)
 	})
@@ -70,7 +70,7 @@ func Test_Confie_Envoy_Verify(t *testing.T) {
 		storage.On("Get", "key").
 			Once().Return([]byte("123456"), nil)
 
-		_, err := e.Verify("key", "000000")
+		err := e.Verify("key", "000000")
 
 		at.Equal(ErrNotMatched, err)
 	})
@@ -81,9 +81,8 @@ func Test_Confie_Envoy_Verify(t *testing.T) {
 			On("Delete", "key").
 			Once().Return(nil)
 
-		ok, err := e.Verify("key", "123456")
+		err := e.Verify("key", "123456")
 		at.Nil(err)
-		at.True(ok)
 	})
 }
 

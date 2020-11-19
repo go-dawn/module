@@ -39,21 +39,21 @@ func (e *Envoy) Make(address, key string) (err error) {
 		return
 	}
 
-	err = e.Send(address, string(c))
-
-	return
+	return e.Send(address, string(c))
 }
 
-func (e *Envoy) Verify(key, code string) (bool, error) {
+// Verify validates the code related with the key.
+// ErrNotMatched will be returned if code is not matched.
+func (e *Envoy) Verify(key, code string) error {
 	b, err := e.m.Get(key)
 	if err != nil {
-		return false, err
+		return err
 	}
 	if code != string(b) {
-		return false, ErrNotMatched
+		return ErrNotMatched
 	}
 
 	_ = e.m.Delete(key)
 
-	return true, nil
+	return nil
 }
