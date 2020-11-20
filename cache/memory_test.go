@@ -241,15 +241,13 @@ func Test_Cache_Memory_GC(t *testing.T) {
 
 	go s.gc()
 
-	time.Sleep(time.Millisecond * 15)
-
-	close(s.done)
-
 	assert.Eventually(t, func() bool {
 		_, b1 := s.db.Load("k1")
 		_, b2 := s.db.Load("k2")
 		return !b1 && b2
 	}, time.Second, time.Millisecond*10)
+
+	close(s.done)
 }
 
 // go test -bench=Benchmark_Cache_Memory_Get -benchmem -count=4
