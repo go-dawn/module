@@ -21,5 +21,5 @@ require (
 	golang.org/x/sys v0.0.0-20201118182958-a01c418693c7 // indirect
 	golang.org/x/text v0.3.4 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
-	gorm.io/gorm v1.20.6
+	gorm.io/gorm v1.20.8
 )
