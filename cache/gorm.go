@@ -36,7 +36,7 @@ func (s *gormStorage) setup() *gormStorage {
 			DoUpdates: clause.AssignmentColumns([]string{"value", "expiry"}),
 		}).
 			Table(s.table).
-			Session(&gorm.Session{WithConditions: true})
+			Session(&gorm.Session{})
 
 		_ = s.db.AutoMigrate(&gormEntry{})
 	}
