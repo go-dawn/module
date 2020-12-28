@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/go-dawn/dawn"
 	"github.com/go-dawn/dawn/config"
 	"github.com/go-dawn/module/cache"
@@ -53,6 +55,10 @@ func (m *Module) Init() dawn.Cleanup {
 	m.setupEnvoys(c)
 
 	return m.cleanup
+}
+
+func (m *Module) RegisterRoutes(router fiber.Router) {
+	router.Get("/confie", m.getConfie)
 }
 
 func (m *Module) setupEnvoys(c *config.Config) {

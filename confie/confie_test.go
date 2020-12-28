@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/go-dawn/dawn/config"
 	"github.com/stretchr/testify/assert"
 )
@@ -37,4 +39,26 @@ func Test_Confie_Module_Init(t *testing.T) {
 			m.Init()
 		})
 	})
+}
+
+func Test_Confie_Module_RegisterRoutes(t *testing.T) {
+	t.Parallel()
+
+	app := fiber.New()
+
+	(&Module{}).RegisterRoutes(app)
+
+	assertHasRoute(t, app, fiber.MethodGet, "/confie")
+}
+
+func assertHasRoute(t *testing.T, app *fiber.App, method string, path string) {
+	for _, routes := range app.Stack() {
+		for _, r := range routes {
+			if r.Method == method && r.Path == path {
+				return
+			}
+		}
+	}
+
+	assert.Failf(t, "%s %s not found", method, path)
 }
