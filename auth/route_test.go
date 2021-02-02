@@ -22,9 +22,9 @@ func Test_Auth_Route_Login(t *testing.T) {
 
 	m, mockRepo := routeModule()
 
-	app, e := deck.SetupServer(t)
-
-	app.Post("/login", m.login)
+	e := deck.SetupServer(t, func(app *fiber.App) {
+		app.Post("/login", m.login)
+	})
 
 	var (
 		username = "kiyon"
@@ -79,14 +79,14 @@ func Test_Auth_Route_Jwt_Middleware(t *testing.T) {
 
 	m, _ := routeModule()
 
-	app, e := deck.SetupServer(t)
+	e := deck.SetupServer(t, func(app *fiber.App) {
+		app.Get("/", m.jwt(), func(c *fiber.Ctx) error {
+			token := c.Locals("user").(*jwt.Token)
+			claims := token.Claims.(jwt.MapClaims)
+			at.Equal(1, int(claims["id"].(float64)))
 
-	app.Get("/", m.jwt(), func(c *fiber.Ctx) error {
-		token := c.Locals("user").(*jwt.Token)
-		claims := token.Claims.(jwt.MapClaims)
-		at.Equal(1, int(claims["id"].(float64)))
-
-		return fiberx.Message(c, "JWT")
+			return fiberx.Message(c, "JWT")
+		})
 	})
 
 	t.Run("missing jwt", func(t *testing.T) {
