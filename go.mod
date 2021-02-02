@@ -8,7 +8,7 @@ require (
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4-0.20201107160528-0cb2c3f897d1
 	github.com/go-redis/redis/v8 v8.4.11
-	github.com/gofiber/fiber/v2 v2.3.3
+	github.com/gofiber/fiber/v2 v2.4.1
 	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/klauspost/compress v1.11.3 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
