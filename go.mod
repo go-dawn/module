@@ -19,5 +19,5 @@ require (
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	golang.org/x/text v0.3.4 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
-	gorm.io/gorm v1.20.12
+	gorm.io/gorm v1.21.2
 )
