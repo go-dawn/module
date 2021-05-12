@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/fatih/structs v1.1.0 // indirect
-	github.com/form3tech-oss/jwt-go v3.2.2+incompatible
+	github.com/form3tech-oss/jwt-go v3.2.3+incompatible
 	github.com/gavv/httpexpect/v2 v2.2.0
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4
