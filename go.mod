@@ -8,7 +8,7 @@ require (
 	github.com/gavv/httpexpect/v2 v2.2.0
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4
-	github.com/go-redis/redis/v8 v8.7.1
+	github.com/go-redis/redis/v8 v8.10.0
 	github.com/gofiber/fiber/v2 v2.5.0
 	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/imkira/go-interpol v1.1.0 // indirect
