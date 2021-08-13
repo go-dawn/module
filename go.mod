@@ -8,7 +8,7 @@ require (
 	github.com/gavv/httpexpect/v2 v2.2.0
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4
-	github.com/go-redis/redis/v8 v8.7.1
+	github.com/go-redis/redis/v8 v8.11.3
 	github.com/gofiber/fiber/v2 v2.5.0
 	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/imkira/go-interpol v1.1.0 // indirect
@@ -23,9 +23,8 @@ require (
 	github.com/valyala/fasthttp v1.22.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
+	go.opentelemetry.io/otel v0.18.0 // indirect
 	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
-	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
-	golang.org/x/sys v0.0.0-20210309040221-94ec62e08169 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/gorm v1.21.3
