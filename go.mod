@@ -9,10 +9,9 @@ require (
 	github.com/go-dawn/dawn v0.4.4-0.20201104074530-2d3d2fc6720d
 	github.com/go-dawn/pkg v0.0.4
 	github.com/go-redis/redis/v8 v8.7.1
-	github.com/gofiber/fiber/v2 v2.5.0
+	github.com/gofiber/fiber/v2 v2.25.0
 	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/imkira/go-interpol v1.1.0 // indirect
-	github.com/klauspost/compress v1.11.12 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/sergi/go-diff v1.1.0 // indirect
@@ -20,12 +19,9 @@ require (
 	github.com/spf13/cast v1.3.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/stretchr/testify v1.7.0
-	github.com/valyala/fasthttp v1.22.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonschema v1.2.0 // indirect
-	golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83
-	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
-	golang.org/x/sys v0.0.0-20210309040221-94ec62e08169 // indirect
+	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 	gorm.io/gorm v1.21.3
